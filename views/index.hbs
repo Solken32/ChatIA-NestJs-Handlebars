@@ -3,30 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <title>Chat IA - Nest + HBS</title>
-  <style>
-    body { font-family: sans-serif; padding: 2rem; max-width: 600px; margin: auto; }
-    .msg { margin-bottom: 1rem; }
-    .user { text-align: right; color: blue; }
-    .bot { text-align: left; color: green; }
-    #messages { min-height: 300px; border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
 </head>
 <body>
-  <h1>💬 Chat IA (NestJS + Handlebars)</h1>
+  <main class="min-h-screen flex items-center justify-center">
+    <section class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
+        <!-- Chat Header -->
+        <div class="bg-blue-600 text-white p-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Chat OpenAi API (NestJS + Handlebars)</h3>
+                    <p class="text-sm text-blue-200">En línea</p>
+                </div>
+            </div>
+        </div>
 
-  <div id="messages"></div>
+        <!-- Chat Messages Area -->
+        <div id="messages" class="max-h-[400px] flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <!-- Message from other user -->
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="bg-white rounded-lg p-3 shadow-sm border max-w-xs">
+                        <p class="text-gray-800">¡Hola! ¿En qué puedo ayudarte hoy?</p>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">10:30 AM</p>
+                </div>
+            </div>
+        </div>
 
-  <input type="text" id="input" placeholder="Escribe tu mensaje..." style="width: 80%;" />
-  <button onclick="send()">Enviar</button>
+        <!-- Chat Input Area -->
+        <div class="border-t bg-white p-4">
+            <div class="flex items-center space-x-3">
+                <!-- Attachment button -->
+                <button class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                    </svg>
+                </button>
+                
+                <!-- Input field -->
+                <div class="flex-1 relative">
+                    <input 
+                        type="text" 
+                        id="input"
+                        placeholder="Escribe tu mensaje..." 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <!-- Emoji button -->
+                <button class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Send button -->
+                <button onclick="send()" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </section>
+  </main>
+
 
   <script>
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
 
-    function appendMessage(content, sender) {
-      const div = document.createElement('div');
-      div.className = 'msg ' + sender;
-      div.innerText = `${sender === 'user' ? 'Tú' : 'IA'}: ${content}`;
+    function appendMessage(content,sender){
+      const div = document.createElement("div"); 
+      div.className= `flex ${sender === 'user' ?  'items-start gap-3':'flex-row-reverse gap-3' }`
+
+      // ícono-avatar
+      const avatar = document.createElement("div");
+      avatar.className= 'w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center flex-shrink-0';
+      avatar.innerHTML=`
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+        </svg>
+      `;
+      
+      // mensaje container
+      const messageWrapper= document.createElement("div");
+      messageWrapper.className=` ${sender === 'user' ? '' : ''}`;
+
+      const bubble = document.createElement("div");
+      bubble.className= `rounded-lg p-3 shadow-sm border max-w-xs ${sender === 'user' ? 'bg-blue-600 text-white' : 'bg-white text-black'}`;
+      bubble.innerHTML = `<p>${content}</p>`;
+
+
+      //poner hora actual
+      const now = new Date();
+      const time = document.createElement("p");
+      time.className= `text-xs text-gray-500 mt-1 ${sender === 'user' ? 'text-end' : ''}`;
+      time.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      messageWrapper.appendChild(bubble);
+      messageWrapper.appendChild(time);
+
+
+      if(sender="user"){
+        div.classList.add("justify-end");
+        div.innerHTML = ''; // Limpia todo
+        div.appendChild(messageWrapper);
+        div.appendChild(avatar); // avatar a la derecha
+      } else {
+        div.appendChild(avatar);
+        div.appendChild(messageWrapper);
+      }
+
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
     }
@@ -52,6 +153,7 @@
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') send();
     });
+    
   </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ import { openai } from 'src/config/openai.config';
 export class ChatService {
     async chatWithOpenAi(messages: any[]){
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5',
+            model: 'gpt-4o',
             messages,
         });
 

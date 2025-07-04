@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
-import {ChatService}  from './modules/chat/chat.service'; // 👈 Importa desde el módulo
+import {ChatService}  from './modules/chat/chat.service'; 
 
 @Controller()
 export class AppController {
@@ -20,7 +20,7 @@ export class AppController {
       { role: "user", content: message},
     ]); 
 
-    return { reply };
+    return { reply };   
   }
 
 
