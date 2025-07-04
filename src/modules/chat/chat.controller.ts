@@ -8,6 +8,7 @@ export class ChatController {
     @Post()
     async handleChat(@Body('messages') messages: any[]){
         const reply = await this.chatService.chatWithOpenAi(messages);
-        return { reply };
-    }
-}
+        //const audioUrl= await this.chatService.generateVoz(String(reply));          
+        return { reply };  
+    }          
+}                      

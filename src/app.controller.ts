@@ -18,9 +18,9 @@ export class AppController {
   async handleChat(@Body("message") message: string){
     const reply = await this.chatService.chatWithOpenAi([
       { role: "user", content: message},
-    ]); 
-
-    return { reply };   
+    ]);                                                       
+    
+    return { reply };                
   }
 
 
